@@ -1,7 +1,6 @@
 from aiokafka import AIOKafkaProducer
 
-KAFKA_TOPIC = 'tasks'
-KAFKA_BOOTSTRAP_SERVERS = 'kafka:9092'
+from core.config import KAFKA_BOOTSTRAP_SERVERS, KAFKA_TOPIC
 
 
 async def send_task_to_kafka(task_id: int):

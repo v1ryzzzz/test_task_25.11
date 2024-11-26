@@ -13,6 +13,22 @@ DB_PORT = os.getenv('DB_PORT')
 
 API_PREFIX = '/api/v1'
 
+RABBITMQ_USER = os.getenv('RABBITMQ_USER')
+RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD')
+RABBITMQ_URL = os.getenv('RABBITMQ_URL')
+RABBITMQ_PORT = os.getenv('RABBITMQ_PORT')
+
+RABBITMQ_URL = f'amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_URL}:{RABBITMQ_PORT}/'
+RABBITMQ_QUEUE = 'tasks'
+
+
+KAFKA_HOST = os.getenv('KAFKA_HOST')
+KAFKA_PORT = os.getenv('KAFKA_PORT')
+KAFKA_BOOTSTRAP_SERVERS = f'{KAFKA_HOST}:{KAFKA_PORT}'
+KAFKA_TOPIC = 'tasks'
+
+UTF8 = 'utf-8'
+
 
 class DbSettings(BaseModel):
     url: str = f'postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
