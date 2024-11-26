@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 
-from tasks.const import TaskStatus
+from tasks.const import TaskStatus, Broker
 
 
 class TaskCreate(BaseModel):
     title: str
     description: str | None = None
+    broker: Broker
 
 
 class TaskResponse(BaseModel):
