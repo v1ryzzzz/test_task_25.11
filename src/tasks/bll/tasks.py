@@ -4,7 +4,9 @@ from typing import List
 from fastapi import HTTPException
 
 from kafka_client.kafka_producer import send_task_to_kafka
+from rabbitmq_client.rabbitmq_producer import send_task_to_rabbitmq
 from tasks.bll.models.tasks import TaskResponse, TaskCreate
+from tasks.const import Broker
 
 
 class AbstractTasksStorage(abc.ABC):
@@ -42,7 +44,10 @@ class TasksService:
             task: TaskCreate,
     ) -> TaskResponse:
         new_task = await self.storage.create_task(task)
-        await send_task_to_kafka(new_task.id)
+        if task.broker == Broker.rabbitmq:
+            await send_task_to_rabbitmq(new_task.id)
+        else:
+            await send_task_to_kafka(new_task.id)
         return new_task
 
     async def get_task(self, task_id: int) -> TaskResponse:

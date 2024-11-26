@@ -1,36 +1,42 @@
 services:
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
   backend:
     build:
       dockerfile: ./Dockerfile
     ports:
       - "8000:8000"
-    depends_on:
-      - postgres
-      - kafka
     env_file:
       - .env
-    restart: always
+    depends_on:
+      - rabbitmq
+      - postgres
 
-  postgres:
-    image: postgres:15
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - TZ=Europe/Moscow
-    ports:
-      - "5432:5432"
-    restart: always
-
-  migrate-db:
+  rabbitmq-consumer:
     build:
       dockerfile: ./Dockerfile
-      context: .
-    volumes:
-      - "./:/app"
-    links:
-      - postgres
-    command: alembic upgrade head
+    command: ["python", "rabbitmq_consumer.py"]
+    depends_on:
+      - backend
+      - rabbitmq
+    env_file:
+      - .env
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
@@ -52,3 +58,13 @@ services:
     ports:
       - "2181:2181"
     restart: always
+
+  kafka-consumer:
+      build:
+        dockerfile: ./Dockerfile
+      command: [ "python", "kafka_consumer.py" ]
+      depends_on:
+        - backend
+        - kafka
+      env_file:
+        - .env

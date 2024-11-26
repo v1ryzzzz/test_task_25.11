@@ -31,3 +31,4 @@ venv.bak/
 !.gitattributes
 !.gitignore
 !.gitkeep
+!.dockerignore
