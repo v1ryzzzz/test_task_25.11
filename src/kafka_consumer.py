@@ -31,5 +31,4 @@ async def worker():
 
 
 if __name__ == '__main__':
-    time.sleep(30)
     asyncio.run(worker())
