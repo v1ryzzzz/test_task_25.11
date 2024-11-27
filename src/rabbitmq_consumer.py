@@ -26,5 +26,4 @@ async def worker():
         await asyncio.Future()
 
 if __name__ == '__main__':
-    time.sleep(30)
     asyncio.run(worker())

@@ -7,6 +7,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    restart: always
 
   postgres:
     image: postgres:15
@@ -37,6 +38,7 @@ services:
       - rabbitmq
     env_file:
       - .env
+    restart: always
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
@@ -68,3 +70,4 @@ services:
         - kafka
       env_file:
         - .env
+      restart: always
